@@ -43,7 +43,7 @@ public class AppChatClient extends JFrame {
             public void run() {
                 try {
                     socketOfClient = new Socket("localhost", 6666);
-                    System.out.println("Connect Successfully! Hehe");
+                    System.out.println("Connect Successfully!");
                     // Tạo luồng đầu ra tại client (Gửi dữ liệu tới server)
                     os = new BufferedWriter(new OutputStreamWriter(socketOfClient.getOutputStream()));
                     // Luồng đầu vào tại Client (Nhận dữ liệu từ server).
