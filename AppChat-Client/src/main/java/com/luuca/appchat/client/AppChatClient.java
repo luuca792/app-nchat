@@ -16,9 +16,13 @@ import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 /**
@@ -34,7 +38,7 @@ public class AppChatClient extends JFrame {
     
     JPanel contPanel;
     JPanel loginForm;
-    JPanel loginPanel;
+    JPanel loginPanel; //card 1
     JLabel lblUser;
     JLabel lblPassword;
     JPanel titlePanel;
@@ -44,7 +48,7 @@ public class AppChatClient extends JFrame {
     
     JButton btnLogin;
     
-    JPanel chatPanel;
+    JPanel chatPanel; //card 2
     
     CardLayout card;
     controllers.ActionHelper action;
@@ -54,6 +58,7 @@ public class AppChatClient extends JFrame {
         this.setSize(400,600);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setTitle("NChat");
+        this.setResizable(false);
         this.setVisible(true);
         setUpSocket();
     }
@@ -70,7 +75,7 @@ public class AppChatClient extends JFrame {
         loginForm = new JPanel();
         chatPanel = new JPanel();
         
-        
+    // LOGIN PANEL
 //        loginPanel.setBackground(Color.blue);
         loginPanel.setLayout(null);
         loginForm.setBounds(70,250,260,60);
@@ -99,9 +104,62 @@ public class AppChatClient extends JFrame {
         btnLogin.setBounds(160,320,80,30);
         loginPanel.add(btnLogin);
         
+    // CHAT PANEL    
+//        chatPanel.setBackground(Color.red);
+        chatPanel.setLayout(null);
+        JTabbedPane tab = new JTabbedPane();
+        tab.setBounds(0,0,395,570);
         
-        chatPanel.setBackground(Color.red);
+        // ONLINE TAB
+        JTextArea txtAreaOnline = new JTextArea();
+        txtAreaOnline.setEditable(false);
+        JScrollPane onlineTab = new JScrollPane(txtAreaOnline, 
+                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         
+//        txtAreaOnline.setText("Luu Ca is online");
+        
+        tab.addTab("Online", onlineTab);
+        // CHAT TAB
+        JPanel panelOnline = new JPanel();
+        panelOnline.setLayout(null);
+        JLabel global = new JLabel("Global");
+        global.setBounds(170, 5, 50, 50);
+        panelOnline.add(global);
+        
+        JTextArea txtAreaChat = new JTextArea();
+        txtAreaChat.setEditable(false);
+        JScrollPane scChat = new JScrollPane(txtAreaChat,
+                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scChat.setBounds(20, 50, 340, 300);
+        panelOnline.add(scChat);
+        
+        JLabel toUser = new JLabel("To user:");
+        toUser.setBounds(20, 360, 100, 20);
+        panelOnline.add(toUser);
+        
+        JComboBox cbbUser = new JComboBox();
+        cbbUser.setBounds(20, 390, 340, 20);
+        panelOnline.add(cbbUser);
+        
+        JLabel message = new JLabel("Message:");
+        message.setBounds(20, 420, 100, 20);
+        panelOnline.add(message);
+        
+        JTextField tfMessage = new JTextField();
+        tfMessage.setBounds(20 , 450 , 340 , 20);
+        panelOnline.add(tfMessage);
+        
+        JButton btnSend = new JButton("Send");
+        btnSend.setBounds(20, 490, 340, 30);
+        panelOnline.add(btnSend);
+        
+        tab.add("Chat", panelOnline);
+        
+        chatPanel.add(tab);
+        
+    // CONTAINER PANEL
         contPanel.add(loginPanel, "1");
         contPanel.add(chatPanel, "2");
         
