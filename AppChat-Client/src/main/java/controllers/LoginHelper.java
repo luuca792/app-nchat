@@ -5,25 +5,27 @@
 package controllers;
 
 import com.luuca.appchat.client.AppChatClient;
+import com.luuca.appchat.client.Login;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.JFrame;
 
 /**
  *
  * @author luuca
  */
-public class ActionHelper implements ActionListener{
+public class LoginHelper implements ActionListener{
     
     AppChatClient frame;
+    Login loginPanel;
     
-    public ActionHelper(AppChatClient frame){
+    public LoginHelper(AppChatClient frame, Login loginPanel){
         this.frame = frame;
+        this.loginPanel = loginPanel;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource()==frame.getBtnLogin()){
+        if (e.getSource()==loginPanel.getBtnLogin()){
             frame.getCard().show(frame.getContPanel(), "2");
         }
     }
