@@ -28,9 +28,13 @@ public class AppChatClient extends JFrame {
     private BufferedReader is;
     private Socket socketOfClient;
     
+    private int id;
+    private String username;
+    
     JPanel contPanel;
     JPanel loginPanel; //card 1
     JPanel chatPanel; //card 2
+    JPanel signupPanel; //card 3
     
     CardLayout card;
     LoginHelper action;
@@ -52,10 +56,12 @@ public class AppChatClient extends JFrame {
         
         loginPanel = new Login(this);
         chatPanel = new Chat(this);
+        signupPanel = new Signup(this);
         
         // CONTAINER PANEL
         contPanel.add(loginPanel, "1");
         contPanel.add(chatPanel, "2");
+        contPanel.add(signupPanel, "3");
         
         card.show(contPanel, "1");
         this.add(contPanel);
@@ -80,7 +86,16 @@ public class AppChatClient extends JFrame {
                     is = new BufferedReader(new InputStreamReader(socketOfClient.getInputStream()));
                     String message;
                     while (true) {
-                           
+                        message = is.readLine();
+                        if(message==null){
+                            break;
+                        }
+                        String[] messageSplit = message.split(",");
+                            if(messageSplit[0].equals("get-id")){
+                                setID(Integer.parseInt(messageSplit[1]));
+                                setIDTitle();
+                            }
+                        
                     }
                 } catch (IOException ex) {
                     Logger.getLogger(AppChatClient.class.getName()).log(Level.SEVERE, null, ex);
@@ -89,6 +104,17 @@ public class AppChatClient extends JFrame {
             }
         };
         thread.run();
+    }
+    private void setID(int id){
+        this.id = id;
+    }
+      private void setIDTitle(){
+        this.setTitle(this.getTitle()+" (ID: "+this.id+")");
+    }
+    public void write(String message) throws IOException{
+        os.write(message);
+        os.newLine();
+        os.flush();
     }
 
     public static void main(String[] args) {

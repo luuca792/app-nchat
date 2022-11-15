@@ -9,6 +9,7 @@ import java.awt.GridLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 /**
@@ -25,8 +26,9 @@ public final class Login extends JPanel { //card 1
     JPanel titlePanel;
     JLabel title;
     JTextField tfUser;
-    JTextField tfPassword;
+    JPasswordField tfPassword;
     JButton btnLogin;
+    JButton btnSignup;
     
     LoginHelper action;
     
@@ -49,12 +51,17 @@ public final class Login extends JPanel { //card 1
         this.add(titlePanel);
         
         loginForm.setLayout(new GridLayout(2,2));
+        
         lblUser = new JLabel("Username: ");
         lblUser.setSize(50,50);
+        
         lblPassword = new JLabel("Password: ");
         lblPassword.setSize(50,50);
+        
         tfUser = new JTextField();
-        tfPassword = new JTextField();
+        tfPassword = new JPasswordField();
+        tfPassword.setEchoChar('*');
+        
         loginForm.add(lblUser);
         loginForm.add(tfUser);
         loginForm.add(lblPassword);
@@ -64,8 +71,16 @@ public final class Login extends JPanel { //card 1
         btnLogin.addActionListener(action);
         btnLogin.setBounds(160,320,80,30);
         this.add(btnLogin);
+        
+        btnSignup = new JButton("Signup");
+        btnSignup.addActionListener(action);
+        btnSignup.setBounds(160,360,80,30);
+        this.add(btnSignup);
     }
-     public JButton getBtnLogin(){
+    public JButton getBtnLogin(){
         return btnLogin;
+    }
+    public JButton getBtnSignup(){
+        return btnSignup;
     }
 }

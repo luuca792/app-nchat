@@ -10,4 +10,22 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <exec.mainClass>com.luuca.appchat.server.AppChatServer</exec.mainClass>
     </properties>
+    
+    <dependencies>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <version>5.3.27.Final</version>
+          </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>5.3.27.Final</version>
+          </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.3.6</version>
+        </dependency>
+    </dependencies>
 </project>
