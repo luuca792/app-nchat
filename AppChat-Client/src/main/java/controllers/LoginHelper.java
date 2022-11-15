@@ -28,6 +28,9 @@ public class LoginHelper implements ActionListener{
         if (e.getSource()==loginPanel.getBtnLogin()){
             frame.getCard().show(frame.getContPanel(), "2");
         }
+        else if (e.getSource()==loginPanel.getBtnSignup()){
+            frame.getCard().show(frame.getContPanel(), "3");
+        }
     }
     
 }
