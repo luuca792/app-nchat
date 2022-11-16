@@ -8,6 +8,9 @@ import com.luuca.appchat.client.AppChatClient;
 import com.luuca.appchat.client.Signup;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -30,8 +33,20 @@ public class SignupHelper implements ActionListener{
             frame.getCard().show(frame.getContPanel(), "1");
         }
         else if (e.getSource()==signupPanel.getBtnSignup()){
-            // goi yc kiem tra username trong csdl toi server
+            try {
+                if (!signupPanel.getTfUsername().getText().equals("")){
+                    frame.setUsername(signupPanel.getTfUsername().getText());
+                    frame.write("check-account"+","+frame.getID()+","+frame.getUsername());
+                    Thread.sleep(1);
+                    System.out.println("Account exist state: "+signupPanel.getAccountExist());
+                }
+                
 //            JOptionPane.showMessageDialog(signupPanel, "Ten nguoi dung da ton tai!", "Loi", JOptionPane.ERROR_MESSAGE);
+            } catch (IOException ex) {
+                Logger.getLogger(SignupHelper.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(SignupHelper.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         
     }

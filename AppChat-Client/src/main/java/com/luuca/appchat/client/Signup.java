@@ -36,6 +36,8 @@ public final class Signup extends JPanel { //card 1
     
     SignupHelper action;
     
+    private boolean accountExist = false;
+    
     public Signup(AppChatClient frame){
         this.frame = frame;
         action = new SignupHelper(frame, this);
@@ -91,8 +93,11 @@ public final class Signup extends JPanel { //card 1
     public JButton getBtnSignup(){
         return btnSignup;
     }
-    public String getUsername(){
-        return tfUser.getText();
+//    public String setUsernameFromTextField(){
+//        return frame.setUsername(tfUser.getText());
+//    }
+    public JTextField getTfUsername(){
+        return tfUser;
     }
     public String getPassword(){
         return Arrays.toString(tfPassword.getPassword());
@@ -102,5 +107,11 @@ public final class Signup extends JPanel { //card 1
     }
     public JButton getBtnBack(){
         return btnBack;
+    }
+    public void setAccountExist(boolean state){
+        this.accountExist = state;
+    }
+    public boolean getAccountExist(){
+        return accountExist;
     }
 }

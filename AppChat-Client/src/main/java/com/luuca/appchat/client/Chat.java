@@ -24,7 +24,7 @@ public final class Chat extends JPanel {
     JTabbedPane tab;
     JTextArea txtAreaOnline;
     JScrollPane onlineTab;
-    JPanel panelOnline;
+    JPanel panelChat;
     JLabel global;
     JTextArea txtAreaChat;
     JScrollPane scChat;
@@ -54,11 +54,11 @@ public final class Chat extends JPanel {
 //        txtAreaOnline.setText("Luu Ca is online");
         tab.addTab("Online", onlineTab);
         // CHAT TAB
-        panelOnline = new JPanel();
-        panelOnline.setLayout(null);
+        panelChat = new JPanel();
+        panelChat.setLayout(null);
         global = new JLabel("Global");
         global.setBounds(170, 5, 50, 50);
-        panelOnline.add(global);
+        panelChat.add(global);
 
         txtAreaChat = new JTextArea();
         txtAreaChat.setEditable(false);
@@ -66,29 +66,29 @@ public final class Chat extends JPanel {
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                 JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scChat.setBounds(20, 50, 340, 300);
-        panelOnline.add(scChat);
+        panelChat.add(scChat);
 
         toUser = new JLabel("To user:");
         toUser.setBounds(20, 360, 100, 20);
-        panelOnline.add(toUser);
+        panelChat.add(toUser);
 
         cbbUser = new JComboBox();
         cbbUser.setBounds(20, 390, 340, 20);
-        panelOnline.add(cbbUser);
+        panelChat.add(cbbUser);
 
         message = new JLabel("Message:");
         message.setBounds(20, 420, 100, 20);
-        panelOnline.add(message);
+        panelChat.add(message);
 
         tfMessage = new JTextField();
         tfMessage.setBounds(20, 450, 340, 20);
-        panelOnline.add(tfMessage);
+        panelChat.add(tfMessage);
 
         btnSend = new JButton("Send");
         btnSend.setBounds(20, 490, 340, 30);
-        panelOnline.add(btnSend);
+        panelChat.add(btnSend);
 
-        tab.add("Chat", panelOnline);
+        tab.add("Chat", panelChat);
 
         this.add(tab);
     }
