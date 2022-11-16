@@ -34,7 +34,7 @@ public class AppChatClient extends JFrame {
     JPanel contPanel;
     JPanel loginPanel; //card 1
     JPanel chatPanel; //card 2
-    JPanel signupPanel; //card 3
+    Signup signupPanel; //card 3
     
     CardLayout card;
     LoginHelper action;
@@ -95,6 +95,11 @@ public class AppChatClient extends JFrame {
                                 setID(Integer.parseInt(messageSplit[1]));
                                 setIDTitle();
                             }
+                            if(messageSplit[0].equals("check-account")){
+                                System.out.println("message[1]="+messageSplit[1]);
+                                        
+                                signupPanel.setAccountExist(Boolean.parseBoolean(messageSplit[1]));
+                            }
                         
                     }
                 } catch (IOException ex) {
@@ -108,6 +113,9 @@ public class AppChatClient extends JFrame {
     private void setID(int id){
         this.id = id;
     }
+    public int getID(){
+        return id;
+    }
       private void setIDTitle(){
         this.setTitle(this.getTitle()+" (ID: "+this.id+")");
     }
@@ -115,6 +123,12 @@ public class AppChatClient extends JFrame {
         os.write(message);
         os.newLine();
         os.flush();
+    }
+    public String getUsername(){
+        return username;
+    }
+    public void setUsername(String username){
+        this.username = username;
     }
 
     public static void main(String[] args) {

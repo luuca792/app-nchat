@@ -22,13 +22,14 @@ import org.hibernate.Session;
  * @author luuca
  */
 public class AppChatServer {
-    
+    public static volatile ServerThreadBus serverThreadBus;
     public static Socket socketOfServer;
     
 
     public static void main(String[] args) {
         int clientNumber = 0;
         ServerSocket listener = null;
+        serverThreadBus = new ServerThreadBus();
         System.out.println("Server is waiting to accept user...");
         try {
             listener = new ServerSocket(6666);
@@ -45,14 +46,14 @@ public class AppChatServer {
         );
         
         
-        Session session = HibernateConnect.getSessionFactory().openSession();
-        session.beginTransaction();
-
-        Account account = new Account("luuca","070901");
-        session.persist(account);
-
-        session.getTransaction().commit();
-        session.close();
+//        Session session = HibernateConnect.getSessionFactory().openSession();
+//        session.beginTransaction();
+//
+//        Account account = new Account("luuca","070901");
+//        session.persist(account);
+//
+//        session.getTransaction().commit();
+//        session.close();
         
         
         try {
@@ -61,6 +62,8 @@ public class AppChatServer {
                 // Đồng thời nhận được một đối tượng Socket tại server.
                 socketOfServer = listener.accept();
                 ServerThread serverThread = new ServerThread(socketOfServer, clientNumber++);
+                serverThreadBus.add(serverThread);
+                System.out.println("Running threads: "+serverThreadBus.getLength());
                 executor.execute(serverThread);
             }
         } catch (IOException ex) {
