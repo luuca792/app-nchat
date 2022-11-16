@@ -91,7 +91,7 @@ public class AppChatClient extends JFrame {
                             break;
                         }
                         String[] messageSplit = message.split(",");
-                            if(messageSplit[0].equals("get-id")){
+                            if(messageSplit[0].equals("get-id")){ //loai request
                                 setID(Integer.parseInt(messageSplit[1]));
                                 setIDTitle();
                             }

@@ -46,7 +46,7 @@ public class ServerThread implements Runnable {
             is = new BufferedReader(new InputStreamReader(socketOfServer.getInputStream()));
             os = new BufferedWriter(new OutputStreamWriter(socketOfServer.getOutputStream()));
             System.out.println("New thread start successfully, ID: " + clientNumber);
-            write("get-id" + "," + this.clientNumber);
+            write("get-id" + "," + this.clientNumber);// messageSplit[0]="get-id" messageSplit[1]="0"
             rs = this.loadAllAccounts();
             
             String message;
