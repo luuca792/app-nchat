@@ -8,6 +8,10 @@ import com.luuca.appchat.client.AppChatClient;
 import com.luuca.appchat.client.Login;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -26,7 +30,36 @@ public class LoginHelper implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource()==loginPanel.getBtnLogin()){
-            frame.getCard().show(frame.getContPanel(), "2");
+            if (!loginPanel.getTfUser().getText().isEmpty() 
+                    && !loginPanel.getTfPassword().getText().isEmpty()){
+                if (!"demo".equals(loginPanel.getTfUser().getText()) 
+                        || !"demo".equals(loginPanel.getTfPassword().getText())){
+                    try {
+                    frame.write("check-credential"+","
+                            +frame.getID()+","
+                            +loginPanel.getTfUser().getText() +","
+                            +loginPanel.getTfPassword().getText());
+                    Thread.sleep(10);
+//                    System.out.println("Credential state: "+loginPanel.getCredentialState());
+                    if (loginPanel.getCredentialState()==0){
+                        JOptionPane.showMessageDialog(loginPanel, "Non-exist username.");
+                        return;
+                    }
+                    else if (loginPanel.getCredentialState()==1) {
+                        JOptionPane.showMessageDialog(loginPanel, "Invalid password.");
+                        return;
+                    }
+                    frame.setUsername(loginPanel.getTfUser().getText());
+                    } catch (InterruptedException | IOException ex) {
+                        Logger.getLogger(LoginHelper.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                loginPanel.getTfUser().setText("");
+                loginPanel.getTfPassword().setText("");
+
+                frame.getCard().show(frame.getContPanel(), "2");
+            }
+            
         }
         else if (e.getSource()==loginPanel.getBtnSignup()){
             frame.getCard().show(frame.getContPanel(), "3");

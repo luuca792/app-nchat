@@ -4,7 +4,6 @@
  */
 package com.luuca.appchat.client;
 
-import controllers.LoginHelper;
 import controllers.SignupHelper;
 import java.awt.GridLayout;
 import java.util.Arrays;

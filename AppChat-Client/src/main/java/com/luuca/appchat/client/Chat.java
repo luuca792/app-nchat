@@ -1,9 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.luuca.appchat.client;
 
+import controllers.ChatHelper;
+import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -34,9 +32,13 @@ public final class Chat extends JPanel {
     JTextField tfMessage;
     JButton btnSend;
     
+    ChatHelper action;
+    
     public Chat(AppChatClient frame) {
         this.frame = frame;
+        action = new ChatHelper(frame, this);
         initComponents();
+        
     }
 
     public void initComponents() {
@@ -74,6 +76,7 @@ public final class Chat extends JPanel {
 
         cbbUser = new JComboBox();
         cbbUser.setBounds(20, 390, 340, 20);
+        cbbUser.addItem("Global");
         panelChat.add(cbbUser);
 
         message = new JLabel("Message:");
@@ -86,11 +89,24 @@ public final class Chat extends JPanel {
 
         btnSend = new JButton("Send");
         btnSend.setBounds(20, 490, 340, 30);
+        btnSend.addActionListener(action);
         panelChat.add(btnSend);
 
         tab.add("Chat", panelChat);
 
         this.add(tab);
+    }
+    public JButton getBtnSend(){
+        return btnSend;
+    }
+    public JTextField getTfMessage(){
+        return tfMessage;
+    }
+    public JComboBox getCbbUser(){
+        return cbbUser;
+    }
+    public JTextArea getTxtAreaChat(){
+        return txtAreaChat;
     }
 
 }

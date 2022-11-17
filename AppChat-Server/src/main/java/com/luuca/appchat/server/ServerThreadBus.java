@@ -27,12 +27,37 @@ public class ServerThreadBus {
     public int getLength(){
         return listServerThreads.size();
     }
-        public void sendAccountExistState(int id, boolean state){
+    public void sendAccountExistState(int id, boolean state){
         for(ServerThread serverThread : AppChatServer.serverThreadBus.getListServerThreads()){
             if(serverThread.getClientNumber()==id){
                 try {
                     serverThread.write("check-account"+","+state);
                     break;
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+    }
+       public void sendCredentialState(int id, int state){ //Send to Client requested checking credential state to login
+        for(ServerThread serverThread : AppChatServer.serverThreadBus.getListServerThreads()){
+            if(serverThread.getClientNumber()==id){
+                try {
+                    serverThread.write("check-credential"+","+state);
+                    break;
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+    }
+    public void broardCast(int id, String message){ //Broadcast to every client (except for self)
+        for(ServerThread serverThread : AppChatServer.serverThreadBus.getListServerThreads()){
+            if (serverThread.getClientNumber() == id) {
+                continue;
+            } else {
+                try {
+                    serverThread.write(message);
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
