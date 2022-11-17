@@ -29,11 +29,11 @@ public class AppChatClient extends JFrame {
     private Socket socketOfClient;
     
     private int id;
-    private String username;
+    private String username = "NONAME";
     
     JPanel contPanel;
-    JPanel loginPanel; //card 1
-    JPanel chatPanel; //card 2
+    Login loginPanel; //card 1
+    Chat chatPanel; //card 2
     Signup signupPanel; //card 3
     
     CardLayout card;
@@ -95,10 +95,19 @@ public class AppChatClient extends JFrame {
                                 setID(Integer.parseInt(messageSplit[1]));
                                 setIDTitle();
                             }
-                            if(messageSplit[0].equals("check-account")){
-                                System.out.println("message[1]="+messageSplit[1]);
+                            else if(messageSplit[0].equals("check-account")){
                                         
                                 signupPanel.setAccountExist(Boolean.parseBoolean(messageSplit[1]));
+                                
+                            }
+                            else if(messageSplit[0].equals("check-credential")){
+                                        
+                                loginPanel.setCredentialState(Integer.parseInt(messageSplit[1]));
+                                
+                            }
+                            else if(messageSplit[0].equals("global-message")){
+                                chatPanel.getTxtAreaChat().setText(chatPanel.getTxtAreaChat().getText()+messageSplit[1]+"\n");
+                                chatPanel.getTxtAreaChat().setCaretPosition(chatPanel.getTxtAreaChat().getDocument().getLength());
                             }
                         
                     }

@@ -47,24 +47,39 @@ public class ServerThread implements Runnable {
             os = new BufferedWriter(new OutputStreamWriter(socketOfServer.getOutputStream()));
             System.out.println("New thread start successfully, ID: " + clientNumber);
             write("get-id" + "," + this.clientNumber);// messageSplit[0]="get-id" messageSplit[1]="0"
-            rs = this.loadAllAccounts();
+            rs = this.loadAllAccounts(); //Pre-load all account information
             
             String message;
             while (!isClosed) {
-                message = is.readLine();
+                message = is.readLine();// Message recevied from Client's output stream
                 if (message == null) {
                     break;
                 }
                 String[] messageSplit = message.split(",");
+            
                 if(messageSplit[0].equals("check-account")){
                     boolean exist = false;
-//                    List<Account> rs = this.loadAllAccounts();
                     for (int i=0; i<rs.size(); i++){
                         if (rs.get(i).getUsername().equals(messageSplit[2])) exist = true;
                     }
-//                    System.out.println(exist);
                     AppChatServer.serverThreadBus.sendAccountExistState(Integer.parseInt(messageSplit[1]), exist);
-            
+                }
+                
+                else if(messageSplit[0].equals("check-credential")){
+                    int state = -1; // (0: non-exist username; 1: invalid password; 2: valid credentials)
+                    for (int i=0; i<rs.size(); i++){
+                        if (rs.get(i).getUsername().equals(messageSplit[2])) {
+                            if (rs.get(i).getPassword().equals(messageSplit[3])) 
+                                state = 2;
+                            else state = 1;
+                        }
+                        else state = 0;
+                    }
+                    AppChatServer.serverThreadBus.sendCredentialState(Integer.parseInt(messageSplit[1]), state);
+                }
+                
+                else if(messageSplit[0].equals("send-to-global")){
+                    AppChatServer.serverThreadBus.broardCast(this.getClientNumber(),"global-message"+","+messageSplit[3]+": "+messageSplit[1]);
                 }
             }
         } catch (IOException ex) {

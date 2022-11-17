@@ -37,7 +37,7 @@ public class SignupHelper implements ActionListener{
                 if (!signupPanel.getTfUsername().getText().equals("")){
                     frame.setUsername(signupPanel.getTfUsername().getText());
                     frame.write("check-account"+","+frame.getID()+","+frame.getUsername());
-                    Thread.sleep(1);
+                    Thread.sleep(10);
                     System.out.println("Account exist state: "+signupPanel.getAccountExist());
                 }
                 

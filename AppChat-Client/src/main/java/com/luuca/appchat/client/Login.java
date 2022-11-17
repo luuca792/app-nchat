@@ -31,6 +31,7 @@ public final class Login extends JPanel { //card 1
     JButton btnSignup;
     
     LoginHelper action;
+    private int credentialState  = -1;
     
     public Login(AppChatClient frame){
         this.frame = frame;
@@ -83,4 +84,19 @@ public final class Login extends JPanel { //card 1
     public JButton getBtnSignup(){
         return btnSignup;
     }
+    public JTextField getTfUser(){
+        return tfUser;
+    }
+    public JTextField getTfPassword(){
+        return tfPassword;
+    }
+
+    public int getCredentialState() {
+        return credentialState;
+    }
+
+    public void setCredentialState(int credentialState) {
+        this.credentialState = credentialState;
+    }
+    
 }
