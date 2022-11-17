@@ -45,6 +45,7 @@ public class ServerThreadBus {
         AppChatServer.serverThreadBus.mutilCastSend("update-online-list"+","+allUsernameString);
     }
     public void sendAccountExistState(int id, boolean state){
+        System.out.println("State: "+state);
         for(ServerThread serverThread : AppChatServer.serverThreadBus.getListServerThreads()){
             if(serverThread.getId()==id){
                 try {

@@ -87,7 +87,7 @@ public final class Login extends JPanel { //card 1
     public JTextField getTfUser(){
         return tfUser;
     }
-    public JTextField getTfPassword(){
+    public JPasswordField getTfPassword(){
         return tfPassword;
     }
 

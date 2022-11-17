@@ -98,6 +98,15 @@ public final class Signup extends JPanel { //card 1
     public JTextField getTfUsername(){
         return tfUser;
     }
+
+    public JPasswordField getTfPassword() {
+        return tfPassword;
+    }
+
+    public JPasswordField getTfRePassword() {
+        return tfRePassword;
+    }
+    
     public String getPassword(){
         return Arrays.toString(tfPassword.getPassword());
     }

@@ -34,11 +34,26 @@ public class SignupHelper implements ActionListener{
         }
         else if (e.getSource()==signupPanel.getBtnSignup()){
             try {
-                if (!signupPanel.getTfUsername().getText().equals("")){
+                String username = signupPanel.getTfUsername().getText();
+                String password = String.valueOf(signupPanel.getTfPassword().getPassword());
+                String rePassword = String.valueOf(signupPanel.getTfRePassword().getPassword());
+                if (!username.equals("")&& !password.equals("")&& !rePassword.equals("")){
                     frame.setUsername(signupPanel.getTfUsername().getText());
                     frame.write("check-account"+","+frame.getID()+","+frame.getUsername());
                     Thread.sleep(10);
-                    System.out.println("Account exist state: "+signupPanel.getAccountExist());
+//                    System.out.println("Account exist state: "+signupPanel.getAccountExist());
+                    if (signupPanel.getAccountExist()==true){
+                        JOptionPane.showMessageDialog(signupPanel, "Username already exist!", "Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                    if (!signupPanel.getPassword().equals(signupPanel.getRePassword())){
+                        JOptionPane.showMessageDialog(signupPanel, "Password in 2 fields does not match!", "Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                    frame.write("create-account"+","+username+","+password);
+                    JOptionPane.showMessageDialog(signupPanel, "Account regsitered!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                    Thread.sleep(10);
+                    frame.write("reload-accounts");
                 }
                 
 //            JOptionPane.showMessageDialog(signupPanel, "Ten nguoi dung da ton tai!", "Loi", JOptionPane.ERROR_MESSAGE);
