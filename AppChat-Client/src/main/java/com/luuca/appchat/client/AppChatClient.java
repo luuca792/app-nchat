@@ -6,12 +6,14 @@ package com.luuca.appchat.client;
 
 import controllers.LoginHelper;
 import java.awt.CardLayout;
+import java.util.List;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
@@ -30,6 +32,7 @@ public class AppChatClient extends JFrame {
     
     private int id;
     private String username = "NONAME";
+    private List<String> onlineList;
     
     JPanel contPanel;
     Login loginPanel; //card 1
@@ -91,19 +94,26 @@ public class AppChatClient extends JFrame {
                             break;
                         }
                         String[] messageSplit = message.split(",");
-                            if(messageSplit[0].equals("get-id")){ //loai request
+                            if(messageSplit[0].equals("get-id")){
                                 setID(Integer.parseInt(messageSplit[1]));
                                 setIDTitle();
                             }
+                            else if (messageSplit[0].equals("update-online-list")) {
+                                onlineList = new ArrayList<>();
+                                String online ="";
+                                String[] onlineSplit = messageSplit[1].split("-");
+                                for(int i=0; i<onlineSplit.length; i++){
+                                    onlineList.add(onlineSplit[i]);
+                                    online+=onlineSplit[i]+" is online\n";
+                                }
+                                chatPanel.getTxtAreaOnline().setText(online);
+                                updateCombobox();
+                            }
                             else if(messageSplit[0].equals("check-account")){
-                                        
                                 signupPanel.setAccountExist(Boolean.parseBoolean(messageSplit[1]));
-                                
                             }
                             else if(messageSplit[0].equals("check-credential")){
-                                        
                                 loginPanel.setCredentialState(Integer.parseInt(messageSplit[1]));
-                                
                             }
                             else if(messageSplit[0].equals("global-message")){
                                 chatPanel.getTxtAreaChat().setText(chatPanel.getTxtAreaChat().getText()+messageSplit[1]+"\n");
@@ -119,6 +129,22 @@ public class AppChatClient extends JFrame {
         };
         thread.run();
     }
+    private void updateCombobox(){
+        chatPanel.getCbbUser().removeAllItems();
+        chatPanel.getCbbUser().addItem("Global");
+        String usernameString = ""+this.username;
+        for(String e : onlineList){
+            if(!e.equals(usernameString)){
+                chatPanel.getCbbUser().addItem(e);
+            }
+        }
+        
+    }
+    public void write(String message) throws IOException{
+        os.write(message);
+        os.newLine();
+        os.flush();
+    }
     private void setID(int id){
         this.id = id;
     }
@@ -128,11 +154,6 @@ public class AppChatClient extends JFrame {
       private void setIDTitle(){
         this.setTitle(this.getTitle()+" (ID: "+this.id+")");
     }
-    public void write(String message) throws IOException{
-        os.write(message);
-        os.newLine();
-        os.flush();
-    }
     public String getUsername(){
         return username;
     }
@@ -140,6 +161,14 @@ public class AppChatClient extends JFrame {
         this.username = username;
     }
 
+    public Chat getChatPanel() {
+        return chatPanel;
+    }
+
+    public Login getLoginPanel() {
+        return loginPanel;
+    }
+    
     public static void main(String[] args) {
         AppChatClient appChatClient = new AppChatClient();
     }

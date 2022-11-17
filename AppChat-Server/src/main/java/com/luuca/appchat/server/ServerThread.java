@@ -25,28 +25,30 @@ import org.hibernate.Session;
 public class ServerThread implements Runnable {
     
     private Socket socketOfServer;
-    private int clientNumber;
+    private int id;
+    private String username;
     private boolean isClosed;
     private BufferedReader is;
     private BufferedWriter os;
     
     List<Account> rs;
 
-    public ServerThread(Socket socketOfServer, int clientNumber) {
+    public ServerThread(Socket socketOfServer, int id) {
         this.socketOfServer = socketOfServer;
-        this.clientNumber = clientNumber;
-        System.out.println("Server thread number " + clientNumber + " started");
+        this.id = id;
+        System.out.println("Server thread number " + id + " started");
         isClosed = false;
     }
     
     @Override
     public void run() {
-//        System.out.println("Running");
         try {
             is = new BufferedReader(new InputStreamReader(socketOfServer.getInputStream()));
             os = new BufferedWriter(new OutputStreamWriter(socketOfServer.getOutputStream()));
-            System.out.println("New thread start successfully, ID: " + clientNumber);
-            write("get-id" + "," + this.clientNumber);// messageSplit[0]="get-id" messageSplit[1]="0"
+            System.out.println("New thread start successfully, ID: " + id);
+            write("get-id" + "," + this.id);// messageSplit[0]="get-id" messageSplit[1]="0"
+            //AppChatServer.serverThreadBus.sendOnlineList(); //update online list for every clients
+            System.out.println("Fetching accounts from database...");
             rs = this.loadAllAccounts(); //Pre-load all account information
             
             String message;
@@ -64,7 +66,12 @@ public class ServerThread implements Runnable {
                     }
                     AppChatServer.serverThreadBus.sendAccountExistState(Integer.parseInt(messageSplit[1]), exist);
                 }
-                
+                else if(messageSplit[0].equals("inform-username")){
+                    this.username = messageSplit[1];
+                    AppChatServer.serverThreadBus.sendOnlineList();
+                    AppChatServer.serverThreadBus.mutilCastSend("global-message"+","+"---"+this.username+" has logged in---");
+                    
+                }
                 else if(messageSplit[0].equals("check-credential")){
                     int state = -1; // (0: non-exist username; 1: invalid password; 2: valid credentials)
                     for (int i=0; i<rs.size(); i++){
@@ -79,17 +86,23 @@ public class ServerThread implements Runnable {
                 }
                 
                 else if(messageSplit[0].equals("send-to-global")){
-                    AppChatServer.serverThreadBus.broardCast(this.getClientNumber(),"global-message"+","+messageSplit[3]+": "+messageSplit[1]);
+                    AppChatServer.serverThreadBus.broardCast(this.getId(),"global-message"+","+messageSplit[3]+": "+messageSplit[1]);
+                }
+                else if(messageSplit[0].equals("send-to-person")){
+                    AppChatServer.serverThreadBus.sendMessageToPerson(messageSplit[3],messageSplit[2]+" (to you): "+messageSplit[1]);
                 }
             }
         } catch (IOException ex) {
             isClosed = true;
-            System.out.println(this.clientNumber+" has logged out");
+            AppChatServer.serverThreadBus.remove(id);
+            System.out.println(this.id+" has logged out");
+            AppChatServer.serverThreadBus.sendOnlineList();
+            AppChatServer.serverThreadBus.mutilCastSend("global-message"+","+"---"+this.username+" has logged out---");
         }
     
     }
-    public int getClientNumber() {
-        return clientNumber;
+    public int getId() {
+        return id;
     }
     public void write(String message) throws IOException{
         os.write(message);
@@ -102,6 +115,10 @@ public class ServerThread implements Runnable {
         Query query = session.createQuery("select i from Account i");
         List<Account> rs = query.getResultList();
         return rs;
+    }
+
+    public String getUsername() {
+        return username;
     }
     
 }

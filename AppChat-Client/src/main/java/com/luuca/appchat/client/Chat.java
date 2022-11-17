@@ -108,5 +108,8 @@ public final class Chat extends JPanel {
     public JTextArea getTxtAreaChat(){
         return txtAreaChat;
     }
-
+    public JTextArea getTxtAreaOnline() {
+        return txtAreaOnline;
+    }
+    
 }
