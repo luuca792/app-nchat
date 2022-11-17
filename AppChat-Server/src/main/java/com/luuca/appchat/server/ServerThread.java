@@ -50,7 +50,7 @@ public class ServerThread implements Runnable {
             //AppChatServer.serverThreadBus.sendOnlineList(); //update online list for every clients
             System.out.println("Fetching accounts from database...");
             rs = this.loadAllAccounts(); //Pre-load all account information
-            
+            this.listAllAccounts();
             String message;
             while (!isClosed) {
                 message = is.readLine();// Message recevied from Client's output stream
@@ -66,6 +66,14 @@ public class ServerThread implements Runnable {
                     }
                     AppChatServer.serverThreadBus.sendAccountExistState(Integer.parseInt(messageSplit[1]), exist);
                 }
+                else if(messageSplit[0].equals("create-account")){
+                    this.createAccount(messageSplit[1], messageSplit[2]);
+                }
+                else if(messageSplit[0].equals("reload-accounts")){
+                    rs = this.loadAllAccounts();
+                    Thread.sleep(100);
+                    this.listAllAccounts();
+                }
                 else if(messageSplit[0].equals("inform-username")){
                     this.username = messageSplit[1];
                     AppChatServer.serverThreadBus.sendOnlineList();
@@ -76,9 +84,9 @@ public class ServerThread implements Runnable {
                     int state = -1; // (0: non-exist username; 1: invalid password; 2: valid credentials)
                     for (int i=0; i<rs.size(); i++){
                         if (rs.get(i).getUsername().equals(messageSplit[2])) {
-                            if (rs.get(i).getPassword().equals(messageSplit[3])) 
-                                state = 2;
-                            else state = 1;
+                            if (rs.get(i).getPassword().equals(messageSplit[3])) {
+                                state = 2; break; }
+                            else { state = 1; break;}
                         }
                         else state = 0;
                     }
@@ -98,6 +106,8 @@ public class ServerThread implements Runnable {
             System.out.println(this.id+" has logged out");
             AppChatServer.serverThreadBus.sendOnlineList();
             AppChatServer.serverThreadBus.mutilCastSend("global-message"+","+"---"+this.username+" has logged out---");
+        } catch (InterruptedException ex) {
+            Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
         }
     
     }
@@ -114,7 +124,23 @@ public class ServerThread implements Runnable {
         session.beginTransaction();
         Query query = session.createQuery("select i from Account i");
         List<Account> rs = query.getResultList();
+        session.getTransaction().commit();
+        session.close();
         return rs;
+    }
+    public void listAllAccounts(){
+        for (int i=0; i<rs.size(); i++)
+            System.out.println(rs.get(i).getUsername()+"-"+rs.get(i).getPassword());
+    }
+    public void createAccount(String username, String password){
+        Session session = HibernateConnect.getSessionFactory().openSession();
+        session.beginTransaction();
+        
+        Account a = new Account(username, password);
+        session.persist(a);
+        
+        session.getTransaction().commit();
+        session.close();
     }
 
     public String getUsername() {

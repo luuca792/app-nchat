@@ -31,14 +31,14 @@ public class LoginHelper implements ActionListener{
     public void actionPerformed(ActionEvent e) {
         if (e.getSource()==loginPanel.getBtnLogin()){
             if (!loginPanel.getTfUser().getText().isEmpty() 
-                    && !loginPanel.getTfPassword().getText().isEmpty()){
+                    && !String.valueOf(loginPanel.getTfPassword().getPassword()).isEmpty()){
                 if (!"demo".equals(loginPanel.getTfUser().getText()) 
-                        || !"demo".equals(loginPanel.getTfPassword().getText())){
+                        || !"demo".equals(String.valueOf(loginPanel.getTfPassword().getPassword()))){
                     try {
                     frame.write("check-credential"+","
                             +frame.getID()+","
                             +loginPanel.getTfUser().getText() +","
-                            +loginPanel.getTfPassword().getText());
+                            +String.valueOf(loginPanel.getTfPassword().getPassword()));
                     Thread.sleep(10);
 //                    System.out.println("Credential state: "+loginPanel.getCredentialState());
                     if (loginPanel.getCredentialState()==0){
