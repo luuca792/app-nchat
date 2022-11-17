@@ -54,9 +54,15 @@ public class LoginHelper implements ActionListener{
                         Logger.getLogger(LoginHelper.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                try { //inform the ServerThread this Client's username
+                    frame.write("inform-username"+","+frame.getUsername());
+                } catch (IOException ex) {
+                    Logger.getLogger(LoginHelper.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                //clear username and password input
                 loginPanel.getTfUser().setText("");
                 loginPanel.getTfPassword().setText("");
-
+                //switch to chat card
                 frame.getCard().show(frame.getContPanel(), "2");
             }
             

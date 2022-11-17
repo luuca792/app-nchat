@@ -41,6 +41,17 @@ public class ChatHelper implements ActionListener{
                         Logger.getLogger(ChatHelper.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                else {
+                     String partner = (String)chatPanel.getCbbUser().getSelectedItem();
+                    System.out.println("Partner: "+partner);
+                    try {
+                        frame.write("send-to-person"+","+messageContent+","+frame.getUsername()+","+partner);
+                        chatPanel.getTxtAreaChat().setText(chatPanel.getTxtAreaChat().getText()+"Bạn (to "+partner+"): "+messageContent+"\n");
+                        chatPanel.getTxtAreaChat().setCaretPosition(chatPanel.getTxtAreaChat().getDocument().getLength());
+                    } catch (IOException ex) {
+                        Logger.getLogger(ChatHelper.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         }
     }
