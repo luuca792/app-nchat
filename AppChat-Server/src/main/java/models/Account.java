@@ -21,16 +21,20 @@ public class Account{
 
     @Column(name="password")
     private String password;
+    
+    @Column(name="displayname")
+    private String displayname;
 
     public Account(){}
 
-    public Account(String username, String password) {
+    public Account(String username, String password, String displayname) {
         this.username = username;
         this.password = password;
+        this.displayname = displayname;
     }
     @Override
     public String toString(){
-        return id+"-"+username+"-"+password+"\n";
+        return id+"-"+username+"-"+password+"-"+displayname+"\n";
     }
 
     public int getId() {
@@ -46,4 +50,11 @@ public class Account{
     public String getPassword(){
         return password;
     }
+    public String getDisplayname() {
+        return displayname;
+    }
+    public void setDisplayname(String displayname) {
+        this.displayname = displayname;
+    }
+    
 }

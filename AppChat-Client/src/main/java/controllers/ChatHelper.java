@@ -34,7 +34,7 @@ public class ChatHelper implements ActionListener{
             if (!messageContent.isEmpty()){
                 if (chatPanel.getCbbUser().getSelectedIndex()==0){
                     try {
-                        frame.write("send-to-global"+","+messageContent+","+frame.getID()+","+frame.getUsername());
+                        frame.write("send-to-global"+","+messageContent+","+frame.getID()+","+frame.getDisplayname());
                         chatPanel.getTxtAreaChat().setText(chatPanel.getTxtAreaChat().getText()+"Bạn: "+messageContent+"\n");
                         chatPanel.getTxtAreaChat().setCaretPosition(chatPanel.getTxtAreaChat().getDocument().getLength());
                     } catch (IOException ex) {
@@ -43,14 +43,40 @@ public class ChatHelper implements ActionListener{
                 }
                 else {
                      String partner = (String)chatPanel.getCbbUser().getSelectedItem();
-                    System.out.println("Partner: "+partner);
+//                    System.out.println("Partner: "+partner);
                     try {
-                        frame.write("send-to-person"+","+messageContent+","+frame.getUsername()+","+partner);
+                        frame.write("send-to-person"+","+messageContent+","+frame.getDisplayname()+","+partner);
                         chatPanel.getTxtAreaChat().setText(chatPanel.getTxtAreaChat().getText()+"Bạn (to "+partner+"): "+messageContent+"\n");
                         chatPanel.getTxtAreaChat().setCaretPosition(chatPanel.getTxtAreaChat().getDocument().getLength());
                     } catch (IOException ex) {
                         Logger.getLogger(ChatHelper.class.getName()).log(Level.SEVERE, null, ex);
                     }
+                }
+            }
+        }
+        else if (e.getSource() == chatPanel.getBtnLogout()){
+            try {
+                frame.write("inform-logout");
+                frame.getCard().show(frame.getContPanel(), "1");
+            } catch (IOException ex) {
+                Logger.getLogger(ChatHelper.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        else if (e.getSource() == chatPanel.getBtnChangeUsername()){
+            if (chatPanel.getTfChangeDisplayname().getText().equals(frame.getDisplayname())) {
+                JOptionPane.showMessageDialog(chatPanel, "Display name must be different than previous!", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+            else {
+                try {
+                    frame.write("update-displayname"+","+frame.getUsername()+","+chatPanel.getTfChangeDisplayname().getText());
+                    Thread.sleep(100);
+                    JOptionPane.showMessageDialog(chatPanel, "Display name updated to "+frame.getDisplayname()+"!\n You'll need to log in again.", "Success!", JOptionPane.INFORMATION_MESSAGE);
+                    frame.write("inform-logout");
+                    frame.getCard().show(frame.getContPanel(), "1");
+                } catch (IOException ex) {
+                    Logger.getLogger(ChatHelper.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(ChatHelper.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }

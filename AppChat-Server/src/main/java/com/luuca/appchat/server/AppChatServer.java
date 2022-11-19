@@ -22,14 +22,14 @@ import org.hibernate.Session;
  * @author luuca
  */
 public class AppChatServer {
-    public static volatile ServerThreadBus serverThreadBus;
+    public static volatile ServerThreadHelper serverThreadBus;
     public static Socket socketOfServer;
     
 
     public static void main(String[] args) {
         int clientNumber = 0;
         ServerSocket listener = null;
-        serverThreadBus = new ServerThreadBus();
+        serverThreadBus = new ServerThreadHelper();
         System.out.println("Server is waiting to accept user...");
         try {
             listener = new ServerSocket(6666);
@@ -44,18 +44,6 @@ public class AppChatServer {
                 TimeUnit.SECONDS,
                 new ArrayBlockingQueue<>(8) // queueCapacity
         );
-        
-        
-//        Session session = HibernateConnect.getSessionFactory().openSession();
-//        session.beginTransaction();
-//
-//        Account account = new Account("luuca","070901");
-//        session.persist(account);
-//
-//        session.getTransaction().commit();
-//        session.close();
-        
-        
         try {
             while (true) {
                 // Chấp nhận một yêu cầu kết nối từ phía Client.

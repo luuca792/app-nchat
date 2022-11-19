@@ -32,6 +32,7 @@ public class AppChatClient extends JFrame {
     
     private int id;
     private String username = "NONAME";
+    private String displayname = "NONAME";
     private List<String> onlineList;
     
     JPanel contPanel;
@@ -94,9 +95,13 @@ public class AppChatClient extends JFrame {
                             break;
                         }
                         String[] messageSplit = message.split(",");
-                            if(messageSplit[0].equals("get-id")){
+                            if (messageSplit[0].equals("get-id")){
                                 setID(Integer.parseInt(messageSplit[1]));
                                 setIDTitle();
+                            }
+                            else if (messageSplit[0].equals("get-displayname")){
+                                System.out.println("Display: "+messageSplit[1]);
+                                setDisplayname(messageSplit[1]);
                             }
                             else if (messageSplit[0].equals("update-online-list")) {
                                 onlineList = new ArrayList<>();
@@ -132,9 +137,10 @@ public class AppChatClient extends JFrame {
     private void updateCombobox(){
         chatPanel.getCbbUser().removeAllItems();
         chatPanel.getCbbUser().addItem("Global");
-        String usernameString = ""+this.username;
+        String displaynameString = ""+this.displayname;
+        System.out.println(this.displayname);
         for(String e : onlineList){
-            if(!e.equals(usernameString)){
+            if(!e.equals(displaynameString)){
                 chatPanel.getCbbUser().addItem(e);
             }
         }
@@ -160,7 +166,15 @@ public class AppChatClient extends JFrame {
     public void setUsername(String username){
         this.username = username;
     }
+    public String getDisplayname() {
+        return displayname;
+    }
 
+    public void setDisplayname(String displayname) {
+        this.displayname = displayname;
+    }
+    
+   
     public Chat getChatPanel() {
         return chatPanel;
     }

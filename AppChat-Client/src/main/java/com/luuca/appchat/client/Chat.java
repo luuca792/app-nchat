@@ -6,6 +6,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
@@ -31,6 +32,20 @@ public final class Chat extends JPanel {
     JLabel message;
     JTextField tfMessage;
     JButton btnSend;
+    
+    JPanel panelSystem;
+    JLabel lblChangeUsername;
+    JTextField tfChangeDisplayname;
+    JButton btnChangeUsername;
+    
+    JLabel lblChangePassword;
+    JLabel lblOldPassword;
+    JPasswordField tfOldPassword;
+    JLabel lblNewPassword;
+    JPasswordField tfNewPassword;
+    JButton btnChangePassword;
+    
+    JButton btnLogout;
     
     ChatHelper action;
     
@@ -91,8 +106,54 @@ public final class Chat extends JPanel {
         btnSend.setBounds(20, 490, 340, 30);
         btnSend.addActionListener(action);
         panelChat.add(btnSend);
-
+        
         tab.add("Chat", panelChat);
+        // SYSTEM TAB
+        panelSystem = new JPanel();
+        panelSystem.setLayout(null);
+        
+        lblChangeUsername = new JLabel("Change display name");
+        lblChangeUsername.setBounds(20,10,300,20);
+        tfChangeDisplayname = new JTextField();
+        tfChangeDisplayname.setBounds(40,40,150,20);
+        btnChangeUsername = new JButton("Change");
+        btnChangeUsername.setBounds(40,70,100,25);
+        btnChangeUsername.addActionListener(action);
+
+        lblChangePassword = new JLabel("Change password");
+        lblChangePassword.setBounds(20,125,300,20);
+        lblOldPassword = new JLabel("Input old password");
+        lblOldPassword.setBounds(40,155,300,20);
+        tfOldPassword = new JPasswordField();
+        tfOldPassword.setBounds(40,185,150,20);
+        lblNewPassword = new JLabel("Input new password");
+        lblNewPassword.setBounds(40,215,300,20);
+        tfNewPassword = new JPasswordField();
+        tfNewPassword.setBounds(40,245,150,20);
+        btnChangePassword = new JButton("Change");
+        btnChangePassword.setBounds(40,275,100,25);
+        btnChangePassword.addActionListener(action);
+        
+        btnLogout = new JButton("Logout");
+        btnLogout.setBounds(20,320,100,25);
+        btnLogout.addActionListener(action);
+        
+        panelSystem.add(lblChangeUsername);
+        panelSystem.add(tfChangeDisplayname);
+        panelSystem.add(btnChangeUsername);
+        panelSystem.add(lblChangePassword);
+        panelSystem.add(lblOldPassword);
+        panelSystem.add(tfOldPassword);
+        panelSystem.add(lblNewPassword);
+        panelSystem.add(tfNewPassword);
+        panelSystem.add(btnChangePassword);
+        panelSystem.add(btnLogout);
+
+        
+        
+        
+        tab.add("System", panelSystem);
+        
 
         this.add(tab);
     }
@@ -110,6 +171,22 @@ public final class Chat extends JPanel {
     }
     public JTextArea getTxtAreaOnline() {
         return txtAreaOnline;
+    }
+
+    public JButton getBtnChangeUsername() {
+        return btnChangeUsername;
+    }
+
+    public JButton getBtnChangePassword() {
+        return btnChangePassword;
+    }
+
+    public JButton getBtnLogout() {
+        return btnLogout;
+    }
+
+    public JTextField getTfChangeDisplayname() {
+        return tfChangeDisplayname;
     }
     
 }

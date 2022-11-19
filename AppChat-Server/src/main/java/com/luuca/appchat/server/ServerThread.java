@@ -27,9 +27,11 @@ public class ServerThread implements Runnable {
     private Socket socketOfServer;
     private int id;
     private String username;
+    private String displayname;
     private boolean isClosed;
     private BufferedReader is;
     private BufferedWriter os;
+    private boolean login = false;
     
     List<Account> rs;
 
@@ -45,12 +47,11 @@ public class ServerThread implements Runnable {
         try {
             is = new BufferedReader(new InputStreamReader(socketOfServer.getInputStream()));
             os = new BufferedWriter(new OutputStreamWriter(socketOfServer.getOutputStream()));
+            write("get-id"+","+this.id);
             System.out.println("New thread start successfully, ID: " + id);
-            write("get-id" + "," + this.id);// messageSplit[0]="get-id" messageSplit[1]="0"
-            //AppChatServer.serverThreadBus.sendOnlineList(); //update online list for every clients
             System.out.println("Fetching accounts from database...");
             rs = this.loadAllAccounts(); //Pre-load all account information
-            this.listAllAccounts();
+//            this.listAllAccounts();
             String message;
             while (!isClosed) {
                 message = is.readLine();// Message recevied from Client's output stream
@@ -72,27 +73,43 @@ public class ServerThread implements Runnable {
                 else if(messageSplit[0].equals("reload-accounts")){
                     rs = this.loadAllAccounts();
                     Thread.sleep(100);
-                    this.listAllAccounts();
+//                    this.listAllAccounts();
                 }
                 else if(messageSplit[0].equals("inform-username")){
+                    rs = this.loadAllAccounts();
                     this.username = messageSplit[1];
+                    this.FetchDisplayName();
+                    this.write("get-displayname"+","+displayname);
+                    this.login = true;
                     AppChatServer.serverThreadBus.sendOnlineList();
-                    AppChatServer.serverThreadBus.mutilCastSend("global-message"+","+"---"+this.username+" has logged in---");
-                    
+                    AppChatServer.serverThreadBus.mutilCastSend("global-message"+","+"---"+this.displayname+" has logged in---");
+//                    System.out.println("Display: "+displayname);
+                }
+                else if(messageSplit[0].equals("inform-logout")){
+                    System.out.println("ID "+this.id+" - has logged out");
+                    AppChatServer.serverThreadBus.mutilCastSend("global-message"+","+"---"+this.displayname+" has logged out---");
+                    this.login = false;
+                    this.username = null;
+                    this.displayname = null;
+                    AppChatServer.serverThreadBus.sendOnlineList();
+                    System.out.println("Running threads: "+AppChatServer.serverThreadBus.getLength());
                 }
                 else if(messageSplit[0].equals("check-credential")){
-                    int state = -1; // (0: non-exist username; 1: invalid password; 2: valid credentials)
+                    int state = 0; // (0: non-exist username; 1: invalid password; 2: valid credentials)
                     for (int i=0; i<rs.size(); i++){
                         if (rs.get(i).getUsername().equals(messageSplit[2])) {
                             if (rs.get(i).getPassword().equals(messageSplit[3])) {
                                 state = 2; break; }
                             else { state = 1; break;}
                         }
-                        else state = 0;
                     }
                     AppChatServer.serverThreadBus.sendCredentialState(Integer.parseInt(messageSplit[1]), state);
                 }
-                
+                else if (messageSplit[0].equals("update-displayname")){
+                    this.displayname = messageSplit[2];
+                    this.updateDisplayName(messageSplit[1], messageSplit[2]);
+                    this.write("get-displayname"+","+displayname);
+                }
                 else if(messageSplit[0].equals("send-to-global")){
                     AppChatServer.serverThreadBus.broardCast(this.getId(),"global-message"+","+messageSplit[3]+": "+messageSplit[1]);
                 }
@@ -103,13 +120,34 @@ public class ServerThread implements Runnable {
         } catch (IOException ex) {
             isClosed = true;
             AppChatServer.serverThreadBus.remove(id);
-            System.out.println(this.id+" has logged out");
             AppChatServer.serverThreadBus.sendOnlineList();
-            AppChatServer.serverThreadBus.mutilCastSend("global-message"+","+"---"+this.username+" has logged out---");
+            System.out.println("ID "+this.id+" - has terminated");
+            if (this.login){
+                AppChatServer.serverThreadBus.mutilCastSend("global-message"+","+"---"+this.displayname+" has logged out---");
+            }
+            System.out.println("Running threads: "+AppChatServer.serverThreadBus.getLength());
+            
         } catch (InterruptedException ex) {
             Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
         }
     
+    }
+    public void FetchDisplayName(){
+        if (this.username.equals("NONAME")) this.displayname="NONAME";
+        else
+        for (int i=0; i<rs.size(); i++)
+            if (rs.get(i).getUsername().equals(this.username))
+                this.displayname = rs.get(i).getDisplayname();
+    }
+    public void updateDisplayName(String username, String displayname){
+        Session session = HibernateConnect.getSessionFactory().openSession();
+        session.beginTransaction();
+        org.hibernate.query.Query query = session.createQuery("UPDATE Account a SET a.displayname = :displayname WHERE a.username = :username");
+        query.setParameter("displayname", displayname);
+        query.setParameter("username", username);
+        query.executeUpdate();
+        session.getTransaction().commit();
+        session.close();
     }
     public int getId() {
         return id;
@@ -136,7 +174,7 @@ public class ServerThread implements Runnable {
         Session session = HibernateConnect.getSessionFactory().openSession();
         session.beginTransaction();
         
-        Account a = new Account(username, password);
+        Account a = new Account(username, password, username);
         session.persist(a);
         
         session.getTransaction().commit();
@@ -145,6 +183,12 @@ public class ServerThread implements Runnable {
 
     public String getUsername() {
         return username;
+    }
+    public String getDisplayname() {
+        return displayname;
+    }
+    public void setDisplayname(String displayname) {
+        this.displayname = displayname;
     }
     
 }

@@ -4,21 +4,24 @@
  */
 package com.luuca.appchat.server;
 
+import controllers.HibernateConnect;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import org.hibernate.Session;
+import org.hibernate.query.Query;
 
 /**
  *
  * @author luuca
  */
-public class ServerThreadBus {
+public class ServerThreadHelper {
     private List<ServerThread> listServerThreads;
     
     public List<ServerThread> getListServerThreads() {
         return listServerThreads;
     }
-    public ServerThreadBus() {
+    public ServerThreadHelper() {
         listServerThreads = new ArrayList<>();
     }
     public void add(ServerThread serverThread){
@@ -35,17 +38,17 @@ public class ServerThreadBus {
         return listServerThreads.size();
     }
     public void sendOnlineList(){
-        String allUsernameString = "";
+        String allDisplaynameString = "";
         List<ServerThread> threadbus = AppChatServer.serverThreadBus.getListServerThreads();
         for(ServerThread serverThread : threadbus){
 //            System.out.println("USERNAME: "+serverThread.getUsername());
-            if (serverThread.getUsername() != null) //Prevent listing clients who's online but haven't log in.
-                allUsernameString+=serverThread.getUsername()+"-";
+            if (serverThread.getDisplayname() != null) //Prevent listing clients who's online but haven't log in.
+                allDisplaynameString+=serverThread.getDisplayname()+"-";
         }
-        AppChatServer.serverThreadBus.mutilCastSend("update-online-list"+","+allUsernameString);
+        AppChatServer.serverThreadBus.mutilCastSend("update-online-list"+","+allDisplaynameString);
     }
     public void sendAccountExistState(int id, boolean state){
-        System.out.println("State: "+state);
+//        System.out.println("State: "+state);
         for(ServerThread serverThread : AppChatServer.serverThreadBus.getListServerThreads()){
             if(serverThread.getId()==id){
                 try {
@@ -91,9 +94,9 @@ public class ServerThreadBus {
             }
         }
     }
-    public void sendMessageToPerson(String username, String message){
+    public void sendMessageToPerson(String displayname, String message){
         for(ServerThread serverThread : AppChatServer.serverThreadBus.getListServerThreads()){
-            if(serverThread.getUsername().equals(username)){
+            if(serverThread.getDisplayname().equals(displayname)){
                 try {
                     serverThread.write("global-message"+","+message);
                     break;
@@ -103,4 +106,5 @@ public class ServerThreadBus {
             }
         }
     }
+
 }

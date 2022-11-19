@@ -8,6 +8,6 @@
       <id name = "id" type = "int" column = "id"/>
       <property name = "username" column = "username" type = "string"/>
       <property name = "password" column = "password" type = "string"/>
-      
+      <property name = "displayname" column = "displayname" type = "string"/>
    </class>
 </hibernate-mapping>
