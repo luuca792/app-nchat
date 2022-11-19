@@ -52,11 +52,13 @@ public class SignupHelper implements ActionListener{
                     }
                     frame.write("create-account"+","+username+","+password);
                     JOptionPane.showMessageDialog(signupPanel, "Account regsitered!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                    signupPanel.getTfUsername().setText("");
+                    signupPanel.getTfPassword().setText("");
+                    signupPanel.getTfRePassword().setText("");
                     Thread.sleep(10);
                     frame.write("reload-accounts");
                 }
                 
-//            JOptionPane.showMessageDialog(signupPanel, "Ten nguoi dung da ton tai!", "Loi", JOptionPane.ERROR_MESSAGE);
             } catch (IOException ex) {
                 Logger.getLogger(SignupHelper.class.getName()).log(Level.SEVERE, null, ex);
             } catch (InterruptedException ex) {

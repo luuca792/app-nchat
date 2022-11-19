@@ -39,24 +39,34 @@ public class LoginHelper implements ActionListener{
                             +frame.getID()+","
                             +loginPanel.getTfUser().getText() +","
                             +String.valueOf(loginPanel.getTfPassword().getPassword()));
-                    Thread.sleep(10);
+                    Thread.sleep(100);
 //                    System.out.println("Credential state: "+loginPanel.getCredentialState());
-                    if (loginPanel.getCredentialState()==0){
-                        JOptionPane.showMessageDialog(loginPanel, "Non-exist username.");
-                        return;
-                    }
-                    else if (loginPanel.getCredentialState()==1) {
-                        JOptionPane.showMessageDialog(loginPanel, "Invalid password.");
-                        return;
-                    }
-                    frame.setUsername(loginPanel.getTfUser().getText());
+                        switch (loginPanel.getCredentialState()) {
+                            case 0:
+                                JOptionPane.showMessageDialog(loginPanel, "Non-exist username.");
+                                return;
+                            case 1:
+                                JOptionPane.showMessageDialog(loginPanel, "Invalid password.");
+                                return;
+                            case 2:
+                                frame.setUsername(loginPanel.getTfUser().getText());
+                                break;
+                            default:
+                                JOptionPane.showMessageDialog(loginPanel, "Something went wrong.");
+                                return;
+                        }
+                    
                     } catch (InterruptedException | IOException ex) {
                         Logger.getLogger(LoginHelper.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
                 try { //inform the ServerThread this Client's username
                     frame.write("inform-username"+","+frame.getUsername());
+                    Thread.sleep(10);
+                    frame.getChatPanel().getTfChangeDisplayname().setText(frame.getDisplayname());
                 } catch (IOException ex) {
+                    Logger.getLogger(LoginHelper.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InterruptedException ex) {
                     Logger.getLogger(LoginHelper.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 //clear username and password input
