@@ -40,6 +40,7 @@ public class ServerThreadHelper {
     public void sendOnlineList(){
         String allDisplaynameString = "";
         List<ServerThread> threadbus = AppChatServer.serverThreadBus.getListServerThreads();
+//        if (threadbus.isEmpty()) allDisplaynameString=null;
         for(ServerThread serverThread : threadbus){
 //            System.out.println("USERNAME: "+serverThread.getUsername());
             if (serverThread.getDisplayname() != null) //Prevent listing clients who's online but haven't log in.

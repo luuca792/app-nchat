@@ -61,7 +61,7 @@ public final class Login extends JPanel { //card 1
         
         tfUser = new JTextField();
         tfPassword = new JPasswordField();
-        tfPassword.setEchoChar('*');
+//        tfPassword.setEchoChar('*');
         
         loginForm.add(lblUser);
         loginForm.add(tfUser);
