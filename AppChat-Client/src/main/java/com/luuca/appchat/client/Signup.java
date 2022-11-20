@@ -68,9 +68,9 @@ public final class Signup extends JPanel { //card 1
         
         tfUser = new JTextField();
         tfPassword = new JPasswordField();
-        tfPassword.setEchoChar('*');
+//        tfPassword.setEchoChar('*');
         tfRePassword = new JPasswordField();
-        tfRePassword.setEchoChar('*');
+//        tfRePassword.setEchoChar('*');
         
         signupForm.add(lblUser);
         signupForm.add(tfUser);

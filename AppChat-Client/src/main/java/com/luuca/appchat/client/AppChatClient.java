@@ -24,7 +24,7 @@ import javax.swing.JPanel;
  * @author luuca
  */
 public class AppChatClient extends JFrame {
-
+    
     private Thread thread;
     private BufferedWriter os;
     private BufferedReader is;
@@ -42,17 +42,17 @@ public class AppChatClient extends JFrame {
     
     CardLayout card;
     LoginHelper action;
-
+    
     public AppChatClient() {
         initComponents();
-        this.setSize(400,600);
+        this.setSize(400, 600);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setTitle("NChat");
         this.setResizable(false);
         this.setVisible(true);
         setUpSocket();
     }
-
+    
     private void initComponents() {
         contPanel = new JPanel();
         card = new CardLayout();
@@ -61,7 +61,7 @@ public class AppChatClient extends JFrame {
         loginPanel = new Login(this);
         chatPanel = new Chat(this);
         signupPanel = new Signup(this);
-        
+
         // CONTAINER PANEL
         contPanel.add(loginPanel, "1");
         contPanel.add(chatPanel, "2");
@@ -70,13 +70,15 @@ public class AppChatClient extends JFrame {
         card.show(contPanel, "1");
         this.add(contPanel);
     }
-    public CardLayout getCard(){
+
+    public CardLayout getCard() {
         return card;
     }
-    public JPanel getContPanel(){
+
+    public JPanel getContPanel() {
         return contPanel;
     }
-
+    
     private void setUpSocket() {
         thread = new Thread() {
             @Override
@@ -91,94 +93,106 @@ public class AppChatClient extends JFrame {
                     String message;
                     while (true) {
                         message = is.readLine();
-                        if(message==null){
+                        if (message == null) {
                             break;
                         }
                         String[] messageSplit = message.split(",");
-                            if (messageSplit[0].equals("get-id")){
-                                setID(Integer.parseInt(messageSplit[1]));
-                                setIDTitle();
-                            }
-                            else if (messageSplit[0].equals("get-displayname")){
-                                System.out.println("Display: "+messageSplit[1]);
-                                setDisplayname(messageSplit[1]);
-                            }
-                            else if (messageSplit[0].equals("update-online-list")) {
-                                onlineList = new ArrayList<>();
-                                String online ="";
+                        if (messageSplit[0].equals("get-id")) {
+                            setID(Integer.parseInt(messageSplit[1]));
+                            setIDTitle();
+                        } else if (messageSplit[0].equals("get-displayname")) {
+//                                System.out.println("Display: "+messageSplit[1]);
+                            setDisplayname(messageSplit[1]);
+                        } else if (messageSplit[0].equals("update-online-list")) {
+                            onlineList = new ArrayList<>();
+                            String online = "";
+//                                System.out.println("message: "+messageSplit[1]);
+                            if (messageSplit.length > 1) {
                                 String[] onlineSplit = messageSplit[1].split("-");
-                                for(int i=0; i<onlineSplit.length; i++){
+                                for (int i = 0; i < onlineSplit.length; i++) {
                                     onlineList.add(onlineSplit[i]);
-                                    online+=onlineSplit[i]+" is online\n";
+                                    online += onlineSplit[i] + " is online\n";
                                 }
                                 chatPanel.getTxtAreaOnline().setText(online);
-                                updateCombobox();
                             }
-                            else if(messageSplit[0].equals("check-account")){
-                                signupPanel.setAccountExist(Boolean.parseBoolean(messageSplit[1]));
-                            }
-                            else if(messageSplit[0].equals("check-credential")){
-                                loginPanel.setCredentialState(Integer.parseInt(messageSplit[1]));
-                            }
-                            else if(messageSplit[0].equals("global-message")){
-                                chatPanel.getTxtAreaChat().setText(chatPanel.getTxtAreaChat().getText()+messageSplit[1]+"\n");
-                                chatPanel.getTxtAreaChat().setCaretPosition(chatPanel.getTxtAreaChat().getDocument().getLength());
-                            }
+                            updateCombobox();
+                        } else if (messageSplit[0].equals("check-account")) {
+                            signupPanel.setAccountExist(Boolean.parseBoolean(messageSplit[1]));
+                        } else if (messageSplit[0].equals("check-password")) {
+                            chatPanel.setOldPasswordState(Boolean.valueOf(messageSplit[1]));
+                        } else if (messageSplit[0].equals("check-credential")) {
+                            loginPanel.setCredentialState(Integer.parseInt(messageSplit[1]));
+                        } else if (messageSplit[0].equals("global-message")) {
+                            chatPanel.getTxtAreaChat().setText(chatPanel.getTxtAreaChat().getText() + messageSplit[1] + "\n");
+                            chatPanel.getTxtAreaChat().setCaretPosition(chatPanel.getTxtAreaChat().getDocument().getLength());
+                        }
                         
                     }
                 } catch (IOException ex) {
                     Logger.getLogger(AppChatClient.class.getName()).log(Level.SEVERE, null, ex);
                 }
-               
+                
             }
         };
         thread.run();
     }
-    private void updateCombobox(){
+
+    private void updateCombobox() {
         chatPanel.getCbbUser().removeAllItems();
         chatPanel.getCbbUser().addItem("Global");
-        String displaynameString = ""+this.displayname;
-        System.out.println(this.displayname);
-        for(String e : onlineList){
-            if(!e.equals(displaynameString)){
+        String displaynameString = "" + this.displayname;
+//        System.out.println(this.displayname);
+        for (String e : onlineList) {
+            if (!e.equals(displaynameString)) {
                 chatPanel.getCbbUser().addItem(e);
             }
         }
         
     }
-    public void write(String message) throws IOException{
+
+    public void write(String message) throws IOException {
         os.write(message);
         os.newLine();
         os.flush();
     }
-    private void setID(int id){
+
+    public void resetCredential() {
+        this.username = "NONAME";
+        this.displayname = "NONAME";
+    }
+
+    private void setID(int id) {
         this.id = id;
     }
-    public int getID(){
+
+    public int getID() {
         return id;
     }
-      private void setIDTitle(){
-        this.setTitle(this.getTitle()+" (ID: "+this.id+")");
+
+    private void setIDTitle() {
+        this.setTitle(this.getTitle() + " (ID: " + this.id + ")");
     }
-    public String getUsername(){
+
+    public String getUsername() {
         return username;
     }
-    public void setUsername(String username){
+
+    public void setUsername(String username) {
         this.username = username;
     }
+
     public String getDisplayname() {
         return displayname;
     }
-
+    
     public void setDisplayname(String displayname) {
         this.displayname = displayname;
     }
     
-   
     public Chat getChatPanel() {
         return chatPanel;
     }
-
+    
     public Login getLoginPanel() {
         return loginPanel;
     }

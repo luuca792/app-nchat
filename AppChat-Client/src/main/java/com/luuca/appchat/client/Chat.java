@@ -44,7 +44,7 @@ public final class Chat extends JPanel {
     JLabel lblNewPassword;
     JPasswordField tfNewPassword;
     JButton btnChangePassword;
-    
+    Boolean OldPasswordState = false;
     JButton btnLogout;
     
     ChatHelper action;
@@ -181,12 +181,28 @@ public final class Chat extends JPanel {
         return btnChangePassword;
     }
 
+    public JPasswordField getTfOldPassword() {
+        return tfOldPassword;
+    }
+
+    public JPasswordField getTfNewPassword() {
+        return tfNewPassword;
+    }
+    
     public JButton getBtnLogout() {
         return btnLogout;
     }
 
     public JTextField getTfChangeDisplayname() {
         return tfChangeDisplayname;
+    }
+
+    public void setOldPasswordState(Boolean OldPasswordState) {
+        this.OldPasswordState = OldPasswordState;
+    }
+
+    public Boolean getOldPasswordState() {
+        return OldPasswordState;
     }
     
 }

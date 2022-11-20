@@ -51,7 +51,6 @@ public class AppChatServer {
                 socketOfServer = listener.accept();
                 ServerThread serverThread = new ServerThread(socketOfServer, clientNumber++);
                 serverThreadBus.add(serverThread);
-                System.out.println("Running threads: "+serverThreadBus.getLength());
                 executor.execute(serverThread);
             }
         } catch (IOException ex) {
