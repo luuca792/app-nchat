@@ -5,7 +5,6 @@
 
 package com.luuca.appchat.server;
 
-import controllers.HibernateConnect;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -14,8 +13,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import models.Account;
-import org.hibernate.Session;
 
 /**
  *

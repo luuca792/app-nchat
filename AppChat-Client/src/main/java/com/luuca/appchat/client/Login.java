@@ -5,7 +5,9 @@
 package com.luuca.appchat.client;
 
 import controllers.LoginHelper;
+import java.awt.Color;
 import java.awt.GridLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -19,6 +21,8 @@ import javax.swing.JTextField;
 public final class Login extends JPanel { //card 1
     
     AppChatClient frame;
+    
+    JLabel login;
     
     JPanel loginForm;
     JLabel lblUser;
@@ -41,20 +45,32 @@ public final class Login extends JPanel { //card 1
     public void initComponent(){
         this.setLayout(null);
         
+        login = new JLabel();
+        login.setBounds(0,0,400,600);
+        ImageIcon onlineTabBG = new ImageIcon("src/main/resources/images/login.png");
+        login.setIcon(onlineTabBG);
+        
+        this.add(login);
+        
         loginForm = new JPanel();
-        loginForm.setBounds(70,250,260,60);
-        this.add(loginForm);
+        loginForm.setBounds(70,200,260,50);
+        loginForm.setLayout(new GridLayout(2,2));
+        login.add(loginForm);
         
         titlePanel = new JPanel();
-        titlePanel.setBounds(0,50,400,50);
-        title = new JLabel("NCHAT");
+        titlePanel.setBounds(0,20,400,150);
+        titlePanel.setOpaque(false);
+        title = new JLabel();
+        ImageIcon nChat = new ImageIcon("src/main/resources/images/NChat.png");
+        title.setIcon(nChat);
         titlePanel.add(title);
-        this.add(titlePanel);
+        login.add(titlePanel);
         
-        loginForm.setLayout(new GridLayout(2,2));
+        
         
         lblUser = new JLabel("Username: ");
         lblUser.setSize(50,50);
+        lblUser.setOpaque(false);
         
         lblPassword = new JLabel("Password: ");
         lblPassword.setSize(50,50);
@@ -67,16 +83,17 @@ public final class Login extends JPanel { //card 1
         loginForm.add(tfUser);
         loginForm.add(lblPassword);
         loginForm.add(tfPassword);
+        loginForm.setOpaque(false);
         
         btnLogin = new JButton("Login");
         btnLogin.addActionListener(action);
-        btnLogin.setBounds(160,320,80,30);
-        this.add(btnLogin);
+        btnLogin.setBounds(160,420,80,30);
+        login.add(btnLogin);
         
         btnSignup = new JButton("Signup");
         btnSignup.addActionListener(action);
-        btnSignup.setBounds(160,360,80,30);
-        this.add(btnSignup);
+        btnSignup.setBounds(160,460,80,30);
+        login.add(btnSignup);
     }
     public JButton getBtnLogin(){
         return btnLogin;

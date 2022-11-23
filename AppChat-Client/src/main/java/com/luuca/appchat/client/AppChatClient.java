@@ -6,6 +6,7 @@ package com.luuca.appchat.client;
 
 import controllers.LoginHelper;
 import java.awt.CardLayout;
+import java.awt.Color;
 import java.util.List;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -18,6 +19,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
 
 /**
  *
@@ -42,6 +46,7 @@ public class AppChatClient extends JFrame {
     
     CardLayout card;
     LoginHelper action;
+    SimpleAttributeSet attr;
     
     public AppChatClient() {
         initComponents();
@@ -123,12 +128,27 @@ public class AppChatClient extends JFrame {
                         } else if (messageSplit[0].equals("check-credential")) {
                             loginPanel.setCredentialState(Integer.parseInt(messageSplit[1]));
                         } else if (messageSplit[0].equals("global-message")) {
-                            chatPanel.getTxtAreaChat().setText(chatPanel.getTxtAreaChat().getText() + messageSplit[1] + "\n");
+//                            chatPanel.getTxtAreaChat().setText(chatPanel.getTxtAreaChat().getText() + messageSplit[1] + "\n");
+                            attr = new SimpleAttributeSet();
+                            if (messageSplit.length>2){
+                                if (messageSplit[2].equals("green")){ //log in message
+                                    StyleConstants.setForeground(attr, new Color(13,153,0));
+                                    StyleConstants.setBold(attr, true);
+                                }
+                                else if (messageSplit[2].equals("red")){ //log out message
+                                    StyleConstants.setForeground(attr, Color.red);
+                                    StyleConstants.setBold(attr, true);
+                                }
+                            }
+                            
+                            chatPanel.getDoc().insertString(chatPanel.getDoc().getLength(), messageSplit[1] + "\n", attr);
                             chatPanel.getTxtAreaChat().setCaretPosition(chatPanel.getTxtAreaChat().getDocument().getLength());
                         }
                         
                     }
                 } catch (IOException ex) {
+                    Logger.getLogger(AppChatClient.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (BadLocationException ex) {
                     Logger.getLogger(AppChatClient.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 
