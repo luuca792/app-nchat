@@ -82,11 +82,11 @@ public class ServerThread implements Runnable {
                     this.write("get-displayname" + "," + displayname);
                     this.login = true;
                     AppChatServer.serverThreadBus.sendOnlineList();
-                    AppChatServer.serverThreadBus.mutilCastSend("global-message" + "," + "---" + this.displayname + " has logged in---");
+                    AppChatServer.serverThreadBus.mutilCastSend("global-message" + "," + "---" + this.displayname + " has logged in---"+","+"green");
 //                    System.out.println("Display: "+displayname);
                 } else if (messageSplit[0].equals("inform-logout")) {
                     System.out.println("ID " + this.id + " - has logged out");
-                    AppChatServer.serverThreadBus.mutilCastSend("global-message" + "," + "---" + this.displayname + " has logged out---");
+                    AppChatServer.serverThreadBus.mutilCastSend("global-message" + "," + "---" + this.displayname + " has logged out---"+","+"red");
                     this.login = false;
                     this.username = null;
                     this.displayname = null;

@@ -60,6 +60,10 @@ public class LoginHelper implements ActionListener{
                         Logger.getLogger(LoginHelper.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                else {
+                    frame.setUsername("NONAME");
+                    frame.setDisplayname("NONAME");
+                }
                 try { //inform the ServerThread this Client's username
                     frame.write("inform-username"+","+frame.getUsername());
                     Thread.sleep(10);

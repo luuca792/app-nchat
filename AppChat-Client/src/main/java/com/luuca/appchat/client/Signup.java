@@ -7,6 +7,7 @@ package com.luuca.appchat.client;
 import controllers.SignupHelper;
 import java.awt.GridLayout;
 import java.util.Arrays;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -25,8 +26,8 @@ public final class Signup extends JPanel { //card 1
     JLabel lblUser;
     JLabel lblPassword;
     JLabel lblRePassword;
-    JPanel titlePanel;
-    JLabel title;
+//    JPanel titlePanel;
+//    JLabel title;
     JTextField tfUser;
     JPasswordField tfPassword;
     JPasswordField tfRePassword;
@@ -34,6 +35,8 @@ public final class Signup extends JPanel { //card 1
     JButton btnBack;
     
     SignupHelper action;
+    
+    JLabel bg;
     
     private boolean accountExist = false;
     
@@ -45,17 +48,24 @@ public final class Signup extends JPanel { //card 1
     public void initComponent(){
         this.setLayout(null);
         
+        bg = new JLabel();
+        bg.setBounds(0,0,400,600);
+        ImageIcon bgSignup = new ImageIcon("src/main/resources/images/signup.png");
+        bg.setIcon(bgSignup);
+        this.add(bg);
+        
         signupForm = new JPanel();
-        signupForm.setBounds(70,250,260,60);
-        this.add(signupForm);
-        
-        titlePanel = new JPanel();
-        titlePanel.setBounds(0,50,400,50);
-        title = new JLabel("Register a brand new account!");
-        titlePanel.add(title);
-        this.add(titlePanel);
-        
+        signupForm.setBounds(70,250,260,80);
         signupForm.setLayout(new GridLayout(3,2));
+        signupForm.setOpaque(false);
+        bg.add(signupForm);
+        
+//        titlePanel = new JPanel();
+//        titlePanel.setBounds(0,50,400,50);
+//        titlePanel.setOpaque(false);
+//        title = new JLabel();
+//        titlePanel.add(title);
+//        bg.add(titlePanel);
         
         lblUser = new JLabel("Username: ");
         lblUser.setSize(50,50);
@@ -81,13 +91,13 @@ public final class Signup extends JPanel { //card 1
         
         btnSignup = new JButton("Sign Up");
         btnSignup.addActionListener(action);
-        btnSignup.setBounds(160,320,80,30);
-        this.add(btnSignup);
+        btnSignup.setBounds(160,420,80,30);
+        bg.add(btnSignup);
         
         btnBack = new JButton("Back");
         btnBack.addActionListener(action);
-        btnBack.setBounds(160,360,80,30);
-        this.add(btnBack);
+        btnBack.setBounds(160,460,80,30);
+        bg.add(btnBack);
     }
     public JButton getBtnSignup(){
         return btnSignup;
