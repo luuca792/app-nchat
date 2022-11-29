@@ -4,7 +4,6 @@
  */
 package com.luuca.appchat.client;
 
-import controllers.LoginHelper;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.util.List;
@@ -45,7 +44,6 @@ public class AppChatClient extends JFrame {
     Signup signupPanel; //card 3
     
     CardLayout card;
-    LoginHelper action;
     SimpleAttributeSet attr;
     
     public AppChatClient() {
@@ -86,49 +84,53 @@ public class AppChatClient extends JFrame {
     
     private void setUpSocket() {
         thread = new Thread() {
-            @Override
-            public void run() {
-                try {
-                    socketOfClient = new Socket("localhost", 6666);
-                    System.out.println("Connect Successfully!");
-                    // Tạo luồng đầu ra tại client (Gửi dữ liệu tới server)
-                    os = new BufferedWriter(new OutputStreamWriter(socketOfClient.getOutputStream()));
-                    // Luồng đầu vào tại Client (Nhận dữ liệu từ server).
-                    is = new BufferedReader(new InputStreamReader(socketOfClient.getInputStream()));
-                    String message;
-                    while (true) {
-                        message = is.readLine();
-                        if (message == null) {
-                            break;
-                        }
-                        String[] messageSplit = message.split(",");
-                        if (messageSplit[0].equals("get-id")) {
+        @Override
+        public void run() {
+            try {
+                socketOfClient = new Socket("localhost", 6666);
+                System.out.println("Connect Successfully!");
+                // Tạo luồng đầu ra tại client (Gửi dữ liệu tới server)
+                os = new BufferedWriter(new OutputStreamWriter(socketOfClient.getOutputStream()));
+                // Luồng đầu vào tại Client (Nhận dữ liệu từ server).
+                is = new BufferedReader(new InputStreamReader(socketOfClient.getInputStream()));
+                String message;
+                while (true) {
+                    message = is.readLine();
+                    if (message == null) {
+                        break;
+                    }
+                    String[] messageSplit = message.split(",");
+                    switch (messageSplit[0]) {
+                        case "get-id":
                             setID(Integer.parseInt(messageSplit[1]));
                             setIDTitle();
-                        } else if (messageSplit[0].equals("get-displayname")) {
-//                                System.out.println("Display: "+messageSplit[1]);
+                            break;
+                        case "get-displayname":
                             setDisplayname(messageSplit[1]);
-                        } else if (messageSplit[0].equals("update-online-list")) {
+                            break;
+                        case "update-online-list":
                             onlineList = new ArrayList<>();
                             String online = "";
-//                                System.out.println("message: "+messageSplit[1]);
                             if (messageSplit.length > 1) {
                                 String[] onlineSplit = messageSplit[1].split("-");
-                                for (int i = 0; i < onlineSplit.length; i++) {
-                                    onlineList.add(onlineSplit[i]);
-                                    online += onlineSplit[i] + " is online\n";
+                                for (String onlineSplit1 : onlineSplit) {
+                                    onlineList.add(onlineSplit1);
+                                    online += onlineSplit1 + " is online\n";
                                 }
                                 chatPanel.getTxtAreaOnline().setText(online);
-                            }
-                            updateCombobox();
-                        } else if (messageSplit[0].equals("check-account")) {
+                            }   updateCombobox();
+                            break;
+                        case "check-account":
                             signupPanel.setAccountExist(Boolean.parseBoolean(messageSplit[1]));
-                        } else if (messageSplit[0].equals("check-password")) {
+                            break;
+                        case "check-password":
                             chatPanel.setOldPasswordState(Boolean.valueOf(messageSplit[1]));
-                        } else if (messageSplit[0].equals("check-credential")) {
+                            break;
+                        case "check-credential":
                             loginPanel.setCredentialState(Integer.parseInt(messageSplit[1]));
-                        } else if (messageSplit[0].equals("global-message")) {
-//                            chatPanel.getTxtAreaChat().setText(chatPanel.getTxtAreaChat().getText() + messageSplit[1] + "\n");
+                            break;
+                        case "global-message":
+                            //                            chatPanel.getTxtAreaChat().setText(chatPanel.getTxtAreaChat().getText() + messageSplit[1] + "\n");
                             attr = new SimpleAttributeSet();
                             if (messageSplit.length>2){
                                 if (messageSplit[2].equals("green")){ //log in message
@@ -139,29 +141,27 @@ public class AppChatClient extends JFrame {
                                     StyleConstants.setForeground(attr, Color.red);
                                     StyleConstants.setBold(attr, true);
                                 }
-                            }
-                            
-                            chatPanel.getDoc().insertString(chatPanel.getDoc().getLength(), messageSplit[1] + "\n", attr);
+                            }   chatPanel.getDoc().insertString(chatPanel.getDoc().getLength(), messageSplit[1] + "\n", attr);
                             chatPanel.getTxtAreaChat().setCaretPosition(chatPanel.getTxtAreaChat().getDocument().getLength());
-                        }
-                        
+                            break;
+                        default:
+                            break;
                     }
-                } catch (IOException ex) {
-                    Logger.getLogger(AppChatClient.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (BadLocationException ex) {
-                    Logger.getLogger(AppChatClient.class.getName()).log(Level.SEVERE, null, ex);
+
                 }
-                
+            } catch (IOException | BadLocationException ex) {
+                Logger.getLogger(AppChatClient.class.getName()).log(Level.SEVERE, null, ex);
             }
+
+        }
         };
-        thread.run();
+        thread.start();
     }
 
     private void updateCombobox() {
         chatPanel.getCbbUser().removeAllItems();
         chatPanel.getCbbUser().addItem("Global");
         String displaynameString = "" + this.displayname;
-//        System.out.println(this.displayname);
         for (String e : onlineList) {
             if (!e.equals(displaynameString)) {
                 chatPanel.getCbbUser().addItem(e);
@@ -169,7 +169,7 @@ public class AppChatClient extends JFrame {
         }
         
     }
-
+    
     public void write(String message) throws IOException {
         os.write(message);
         os.newLine();
